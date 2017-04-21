@@ -1,0 +1,25 @@
+.empty-card {
+  display:block;
+  border-radius:4px;
+  float:left;
+  border:1px solid #ccc;
+  height: 125px;
+  width:75px;
+  user-select:none;
+  background-color: white;
+  align-content: center;
+}
+
+.empty-card:hover {
+  border-color:#f00
+}
+
+.dealer {
+  font-size: 24px;
+}
+
+.dealer-one {
+  position: relative;
+  left: 600px;
+  top: 10px;
+}
