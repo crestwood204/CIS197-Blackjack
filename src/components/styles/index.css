@@ -1,0 +1,86 @@
+button {
+  text-transform: uppercase;
+  margin: 2px;
+  font-weight: 200;
+  background: rgba(255, 255, 255, 1);
+  border: none;
+}
+
+button:hover {
+  cursor: pointer;
+  font-weight: 800;
+  border-left: 2px solid #17822c;
+}
+
+button:focus {outline:0;}
+
+
+body {
+  margin: 0;
+  padding: 0;
+  font-family: sans-serif;
+  text-align: center;
+  background-color: #17822c;
+}
+
+.App {
+  text-align: center;
+}
+
+.App-header {
+  background-color: #222;
+  height: 100px;
+  color: #17822c;
+  padding-top: 1px;
+}
+
+.title {
+  font-size: 36px;
+}
+
+.card-back {
+  display:block;
+  border-radius:4px;
+  float:left;
+  border:1px solid #ccc;
+  height: 125px;
+  width:75px;
+  user-select:none;
+  background-color: black;
+  align-content: center;
+}
+
+.card-back:hover {
+  border-color: white;
+}
+
+
+.card {
+  display:block;
+  border-radius:4px;
+  float:left;
+  border:1px solid #ccc;
+  height: 125px;
+  width:75px;
+  user-select:none;
+  background-color: white;
+  align-content: center;
+}
+
+.card:hover {
+  border-color:#f00
+}
+
+.dealer {
+  font-size: 24px;
+}
+
+.controls {
+  width: 50%;
+  float: right;
+}
+
+.bets {
+  width: 50%;
+  float: left;
+}
