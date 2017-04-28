@@ -1,17 +1,22 @@
 import React, { PropTypes } from 'react';
 import { Provider } from 'react-redux';
-import { Router, Route, browserHistory, Switch } from 'react-router-dom';
-import Blackjack from './components/Blackjack.jsx';
+import BlackjackWrapper from './components/BlackjackWrapper';
 import NotFound from './components/NotFound/';
+
+import {
+  BrowserRouter,
+  Route,
+  Switch
+} from 'react-router-dom';
 
 const Root = ({ store }) => (
   <Provider store={store}>
-    <Router history={browserHistory}>
+    <BrowserRouter>
       <Switch>
-        <Route exact path="/" component={Blackjack} />
+        <Route exact path="/" component={BlackjackWrapper}/>
         <Route path="*" component={NotFound} />
       </Switch>
-    </Router>
+    </BrowserRouter>
   </Provider>
 );
 

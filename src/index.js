@@ -8,7 +8,7 @@ import * as initialState from './initialState';
 import NotFound from './components/NotFound';
 import { Provider } from 'react-redux';
 import Root from './routes';
-import Blackjack from './components/Blackjack';
+import BlackjackWrapper from './components/BlackjackWrapper';
 
 import {
   BrowserRouter,
@@ -19,13 +19,7 @@ import {
 const store = createStore(reducers, initialState);
 
 ReactDOM.render((
-  //<Root store={store}/>
 
-  <BrowserRouter>
-    <Switch>
-      <Route exact path="/" component={Blackjack} store={store}/>
-      <Route path="*" component={NotFound} />
-    </Switch>
-  </BrowserRouter>
+  <Root store={store}/>
   
 ), document.getElementById( 'root' ) )

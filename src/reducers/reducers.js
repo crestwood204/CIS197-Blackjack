@@ -84,7 +84,7 @@ var mainReducer = function mainReducer(state, action) {
         state.player_turn = true;
         break;
       default: {
-        return;
+        return state;
       }
     }
   }

@@ -3,7 +3,6 @@ import React from 'react';
 import Card from './Card';
 import * as actions from '../actions/actions.js';
 import * as initialState from '../initialState.js';
-import { connect } from 'redux';
 
 
 export default class Blackjack extends React.Component {
@@ -24,8 +23,8 @@ export default class Blackjack extends React.Component {
   }
 
   componentWillMount() {
-    this.store = this.props.route.store;
-    console.log(this.store);
+
+    console.log(this.props.state);
     this.props.store.subscribe(function () {
       this.setState(this.props.store.getState());
     }.bind(this));
@@ -137,15 +136,15 @@ export default class Blackjack extends React.Component {
   }
 }
 /*
-let mapStateToProps = (state) => {
+let mapstatetoprops = (state) => {
   return state;
 } 
 
-let mapDispatchToProps = (state) => {
+let mapdispatchtoprops = (state) => {
   return state;
 }
 
-const blackjack = connect(mapStateToProps, mapDispatchToProps)(Blackjack);
+const blackjack = connect(mapstatetoprops, mapdispatchtoprops)(blackjack);
 
 export default blackjack
 */
