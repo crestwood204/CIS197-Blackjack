@@ -3,8 +3,7 @@ import React from 'react';
 import Card from './Card';
 import * as actions from '../actions/actions.js';
 import * as initialState from '../initialState.js';
-import { connect } from 'redux';
-
+import $ from 'jquery';
 
 export default class Blackjack extends React.Component {
   // Here we subscribe to changes in the store data and update
@@ -13,6 +12,7 @@ export default class Blackjack extends React.Component {
   // organize things this way for the sake of the game's performance.
   constructor() {
     super();
+    this.state = initialState;
     this.onBet = this.onBet.bind(this);
     this.onReset = this.onReset.bind(this);
     this.onHit = this.onHit.bind(this);
@@ -24,59 +24,55 @@ export default class Blackjack extends React.Component {
   }
 
   componentWillMount() {
-    this.store = this.props.route.store;
-    console.log(this.store);
-    this.props.store.subscribe(function () {
-      this.setState(this.props.store.getState());
-    }.bind(this));
-    console.log("componentDidMount");
+    console.log(this.props.state);
+    console.log(this.props.state.busted);
+    console.log('componentWillMount');
   }
 
   onBet(amount) {
-    this.props.store.dispatch(actions.bet(amount));
+    console.log("betting: " + amount);
+    this.props.dispatch(actions.bet(amount));
   }
 
   onReset() {
-    this.props.store.disptach(actions.reset());
+    this.props.dispatch(actions.reset());
   }
 
   onHit() {
-    this.props.store.dispatch(actions.hit());
+    this.props.dispatch(actions.hit());
+    this.render();
   }
 
   onStand() {
-    this.props.store.dispatch(actions.stand());
+    this.props.dispatch(actions.stand());
   }
 
   onDeal() {
-    this.props.store.dispatch(actions.deal());
+    this.props.dispatch(actions.deal());
   }
 
   onBusted() {
-    this.props.store.dispatch(actions.busted());
+    this.props.dispatch(actions.busted());
   }
 
   onDealerTurn() {
-    this.props.store.dispatch(actions.dealerTurn());
+    this.props.dispatch(actions.dealerTurn());
   }
 
   onDealerBusted() {
-    this.props.store.dispatch(actions.dealerBusted());
+    this.props.dispatch(actions.dealerBusted());
   }
   render() {
-    console.log(this.props.store);
-    
-    const dealer_hand = () => {
-      for (var i = 0; i < this.state.dealer_cards.length; i++) {
-        var card;
-        if (this.state.player_turn && i === 0) {
-          card = <Card store={this.props.store} index={i} number={this.state.dealer_cards[i]} key={i} hidden={true}></Card>;
-        } else {
-          card = <Card store={this.props.store} index={i} number={this.state.dealer_cards[i]} key={i} hidden={false}></Card>;
-        }
-        return card;
+    console.log("rendering");
+    console.log(this.props.state.dealer_cards);
+    const dealer_hand = this.props.state.dealer_cards.map((card, c) => {
+      console.log("called");
+      if (this.props.state.player_turn && c === 0) {
+        return <Card index={c} number={this.props.state.dealer_cards[c]} key={c} hidden={true}></Card>;
+      } else {
+        return <Card index={c} number={this.props.state.dealer_cards[c]} key={c} hidden={false}></Card>;
       }
-    }
+    });
 
     const dealer = <div className="dealer">
       <p> Dealer: </p>
@@ -86,15 +82,14 @@ export default class Blackjack extends React.Component {
       </div>;
 
     const increment_key = (number) => {
-      return this.state.dealer_cards.length + number;
+      return this.props.state.dealer_cards.length + number;
     }
 
-    const player_hand = () => {
-      for (var i = 0; i < this.state.player_cards.length; i++) {
-        var number = increment_key(i);
-        return <Card store={this.props.store} index={i} number={this.state.dealer_cards} key={number}> hidden={false}</Card>
-      }
-    }
+    console.log(this.props.state.player_cards);
+    const player_hand = this.props.state.player_cards.map((card, c) => {
+      console.log("player called");
+      return <Card index={c} number={this.props.state.player_cards[c]} key={c + 100} hidden={false}> </Card>
+    });
 
     const player = <div className="player">
       <p> Player: </p>
@@ -103,49 +98,68 @@ export default class Blackjack extends React.Component {
       </div>
       </div>;
 
+    const money = <div className="money">
+        <h4>Money: {this.props.state.money}</h4>
+        </div>
+
+    const bet = <div className="bet">
+    <h4>Bet: {this.props.state.bet}</h4>
+    </div>
+
     const bets = <div className="bets">
       <h4>Bets</h4> 
       <button key='10' onClick={_.partial(this.onBet, 10)}>bet_10</button> 
       <button key='25' onClick={_.partial(this.onBet, 25)}>bet_25</button>
       <button key='50' onClick={_.partial(this.onBet, 50)}>bet_50</button>
       <button key='100' onClick={_.partial(this.onBet, 100)}>bet_100</button>
-      <button key='Reset Bet' onClick={this.onReset}>reset</button>;
-      </div>;
+      <button key='Reset Bet' onClick={this.onReset}>reset</button>
+      </div>
 
     const dealer_controls = <div className="controls">
+      <h4>Controls</h4>
       <button key='Deal' onClick={this.onDeal}>deal</button>
       <button key='Hit' onClick={this.onHit}>hit</button>
       <button key="Stand" onClick={this.onStand}>stand</button>
-      </div>;
+      </div>
 
     const controls = <div className="controls">
+      <h4>Controls</h4>
       <button key='Hit' onClick={this.onHit}>hit</button>
       <button key="Stand" onClick={this.onStand}>stand</button>
       </div>;
-    if (this.state.busted) {
+
+    $('.game').remove();
+    if (this.props.state.busted) {
+      console.log('onBusted');
       this.onBusted();
-      return (<div className="game">{dealer}<p> YOU BUSTED!></p>{bets}{controls}</div>);
-    } else if (this.state.dealer_busted) {
+      $('.root').append(<div className="game">{dealer}{money}{bet}<p> YOU BUSTED!></p>{bets}{controls}</div>);
+    } else if (this.props.state.dealer_busted) {
+      console.log('onDealerBusted');
       this.onDealerBusted();
-      return (<div className="game"><p> DEALER BUSTED!></p>{bets}{controls}</div>);
-    } else if (this.state.player_turn) {
-      return (<div className="game">{dealer}{player}{bets}{controls}</div>);
+      $('.root').append(<div className="game"><p> DEALER BUSTED!></p>{money}{bet}{player}{bets}{controls}</div>);
+    } else if (this.props.state.player_turn) {
+      console.log('onPlayerTurn');
+      $('.root').append(<div className="game">{dealer}{money}{bet}{player}{bets}{controls}</div>);
     } else {
+      console.log('onDealerTurn');
       this.onDealerTurn();
-      return (<div className="game">{dealer}{player}{bets}{dealer_controls}</div>);
+      $('.root').append(<div className="game">{dealer}{money}{bet}{player}{bets}{dealer_controls}</div>);
+    }
+    if (this.props.state.busted) {
+      console.log('onBusted');
+      this.onBusted();
+      return (<div className="game">{dealer}{money}{bet}<p> YOU BUSTED!></p>{bets}{controls}</div>);
+    } else if (this.props.state.dealer_busted) {
+      console.log('onDealerBusted');
+      this.onDealerBusted();
+      return (<div className="game"><p> DEALER BUSTED!></p>{money}{bet}{player}{bets}{controls}</div>);
+    } else if (this.props.state.player_turn) {
+      console.log('onPlayerTurn');
+      return (<div className="game">{dealer}{money}{bet}{player}{bets}{controls}</div>);
+    } else {
+      console.log('onDealerTurn');
+      this.onDealerTurn();
+      return (<div className="game">{dealer}{money}{bet}{player}{bets}{dealer_controls}</div>);
     }
   }
 }
-/*
-let mapStateToProps = (state) => {
-  return state;
-} 
-
-let mapDispatchToProps = (state) => {
-  return state;
-}
-
-const blackjack = connect(mapStateToProps, mapDispatchToProps)(Blackjack);
-
-export default blackjack
-*/

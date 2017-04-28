@@ -3,11 +3,16 @@ const player_cards = [null, null];
 const dealer_cards = [null, null];
 
 const deck = [];
-for (var i = 0; i < 13; i++) {
+for (var i = 1; i < 14; i++) {
   for (var j = 0; j < 4; j++) {
     deck.push(i);
   }
 }
+
+//1: Ace
+//11: Jack
+//12: Queen
+//13: King
 
 //set initial cards
 const get_card = function () {
@@ -23,7 +28,7 @@ player_cards[1] = get_card();
 dealer_cards[0] = get_card();
 dealer_cards[1] = get_card();
 
-const money = 0;
+const money = 1000;
 const bet = 0;
 const busted = false;
 const count = 0;
