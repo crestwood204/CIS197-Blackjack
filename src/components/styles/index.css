@@ -54,18 +54,9 @@ body {
   border-color: white;
 }
 
-
 .card {
-  position: relative;
-  display:block;
-  border-radius:4px;
-  float:left;
-  border:1px solid #ccc;
-  height: 125px;
-  width:75px;
-  user-select:none;
+  font-size: 100px;
   background-color: white;
-  align-content: center;
 }
 
 .card:hover {
@@ -73,45 +64,51 @@ body {
 }
 
 .dealer {
+  position: absolute;
+  top: 12%;
+  left: 47%;
   font-size: 24px;
-}
-
-.dealer_hand {
-  align-content: center;
-  border-radius: 4px;
-  position: relative;
-  left: 45%;
+  text-align: center;
 }
 
 .player {
   position: absolute;
-  top: 350px;
-  left: 300px;
+  top: 40%;
+  left: 47%;
   font-size: 24px;
-  align-content: center;
-}
-
-.player_hand {
-
+  text-align: center;
 }
 
 .money {
   position: absolute;
-  bottom: 50px;
+  top: 40%;
+  left: 5%;
 }
 
 .bet {
   position: absolute;
-  bottom: 50px;
-  right: 20px;
+  top: 40%;
+  right: 10%;
 }
 
 .controls {
+  position: absolute;
+  bottom: 20%;
+  left: 50%;
   width: 50%;
   float: right;
 }
 
 .bets {
+  position: absolute;
+  bottom: 20%;
+  left: 1%;
   width: 50%;
   float: left;
+}
+
+.message {
+  position: absolute;
+  bottom: 10%;
+  left: 45%;
 }

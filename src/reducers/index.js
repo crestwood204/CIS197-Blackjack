@@ -1,119 +1,211 @@
 import * as initialState from '../initialState.js';
-
-var getCard = function getCard(state) {
-  //if deck is empty, reshuffle
-  if (state.deck.length < 1) {
-    state.deck = initialState.deck;
-  }
-
-
-  var random = Math.round(Math.random() * state.deck.length);
-  var card_number = state.deck[random];
-  state.deck.splice(random, 1);
-  return card_number;
-}
+import _ from 'lodash';
 
 var mainReducer = function mainReducer(state, action) {
+  var bet;
+  var money;
+  var card_number;
+  var card_suit;
+  var player_cards;
+  var dealer_cards;
+  var deck;
+  var random;
+  var dealer_count;
+  var count;
+  var busted;
+  var dealer_busted;
+  var player_turn;
+  var card;
+  var i;
   switch(action.type) {
     case 'BET': {
-      console.log("betting" + action.amount);
-      //if you have enough money, bet the amount
-      if (state.money > action.amount) {
-        state.bet += action.amount;
-        state.money -= action.amount;
+      if (state.player_turn) {
+        return state;
       }
-      console.log(state.money);
-      break;
+      //if you have enough money, bet the amount
+      bet = state.bet;
+      money = state.money;
+      if (state.money >= action.amount) {
+        bet += action.amount;
+        money -= action.amount;
+      }
+      return _.assign({}, state, {bet: bet, money: money});
     }
     case 'RESET': {
-      state.money += state.bet;
-      state.bet = 0;
-      break;
+      if (state.player_turn) {
+        return state;
+      }
+      money = state.money;
+      money += state.bet;
+      return _.assign({}, state, {bet: 0, money: money});
     }
     case 'HIT': {
-      console.log("hit");
+      if (state.busted || !state.player_turn) {
+        console.log("returning state");
+        return state;
+      }
       //get new card number
-      var card_number = getCard(state);
+      deck = state.deck;
+      bet = state.bet;
+
+      //make sure deck isn't empty, if it is, reshuffle
+      if (deck.length < 1) {
+        deck = initialState.deck;
+      }
+
+      random = Math.floor(Math.random() * deck.length);
+      card_number = deck[random][0];
+      card_suit = deck[random][1];
+      deck.splice(random, 1);
 
       //push card to player cards array
-      state.player_cards.push(card_number);
+      card = [card_number, card_suit];
+      player_cards = state.player_cards;
+      player_cards.push(card);
+
       if (card_number === 11 || card_number === 12 || card_number === 13) {
         card_number = 10;
       }
       //increment player count
-      state.count += card_number;
+      count = state.count;
+      count += card_number;
 
       //check if player has busted
-      if (state.count > 21) {
-        state.busted = true;
+      busted = state.busted;
+      player_turn = state.player_turn;
+      if (count > 21) {
+        busted = true;
+        player_turn = false;
+        bet = 0;
       }
-      break;
-    }
-    case 'STAND': {
-      state.player_turn = false;
-      break;
+  
+      return _.assign({}, state, {deck: deck, player_cards: player_cards, count: count, busted: busted, bet: bet, player_turn: player_turn});
     }
     case 'DEAL': {
-      state.player_cards = [getCard(state), getCard(state)];
-      state.dealer_cards = [getCard(state), getCard(state)];
-      break;
+      //make sure bet is greater than zero
+      if (state.bet < 1) {
+        return _.assign({}, state, {bet_zero: true});
+      }
+
+      deck = state.deck;
+      player_cards = [];
+      dealer_cards = [];
+      count = 0;
+      dealer_count = 0;
+
+      //get 2 fresh cards from the deck for dealer and player
+      for (i = 0; i < 4; i++) {
+        //check if deck is empty
+        if (deck.length < 1) {
+          deck = initialState.deck;
+        }
+
+        random = Math.floor(Math.random() * deck.length);
+        card_number = deck[random][0];
+        card_suit = deck[random][1];
+        deck.splice(random, 1);
+        card = [card_number, card_suit];
+
+        if (i < 2) {
+          player_cards.push(card);
+          if (card_number === 11 || card_number === 12 || card_number === 13) {
+            card_number = 10;
+          }
+          count += card_number;
+        } else {
+          dealer_cards.push(card);
+          if (card_number === 11 || card_number === 12 || card_number === 13) {
+            card_number = 10;
+          } if (card_number === 1) {
+            card_number = 11;
+          }
+          dealer_count += card_number;
+        }
+      }
+      return _.assign({}, state, {deck: deck, player_cards: player_cards, dealer_cards: dealer_cards, count: count, 
+        dealer_count: dealer_count, player_turn: true, busted: false, dealer_busted: false, bet_zero: false, 
+        player_won: false, dealer_won: false, tie: tie});
     }
     case 'BUSTED': {
-      state.busted = false;
-      state.bet = 0;
-      state.player_turn = true;
-      break;
+      return _.assign({}, state, {busted: false, bet: 0, player_turn: true});
     }
-    case 'DEALER_TURN':
-      var temp_dealer_count = state.dealer_count;
+    case 'STAND':
+      if (!state.player_turn || state.busted) {
+        console.log("returning state");
+        return state;
+      }
       var temp_player_count = state.count;
+      dealer_cards = state.dealer_cards;
+      player_cards = state.player_cards;
+      bet = state.bet;
+      money = state.money;
+      deck = state.deck;
+      dealer_count = state.dealer_count;
+      var dealer_won = state.dealer_won;
+      var player_won = state.player_won;
+      var tie = state.tie;
 
-      //calculate max dealer count with Ace's as 11
-      for (var i = 0; i < state.dealer_cards.length; i++) {
-        if (state.dealer_cards[i] === 1 && (temp_dealer_count + 10) < 22) {
-          temp_dealer_count += 10;
+
+      while (dealer_count < 17) {
+        //dealer draws a card
+        //make sure deck isn't empty, if it is, reshuffle
+        if (deck.length < 1) {
+          deck = initialState.deck;
+        }
+
+        random = Math.floor(Math.random() * deck.length);
+        card_number = deck[random][0];
+        card_suit = deck[random][1];
+        deck.splice(random, 1);
+
+        //push card to dealer cards array
+        card = [card_number, card_suit];
+        dealer_cards.push(card);
+
+        if (card_number === 11 || card_number === 12 || card_number === 13) {
+          card_number = 10;
+        } else if (card_number === 1) {
+          card_number = 11;
+        }
+        //increment dealer count
+        dealer_count += card_number;
+
+        //check if dealer has busted
+        if (dealer_count > 21) {
+          dealer_busted = true;
         }
       }
 
       //calculate max player count with Ace's as 11
-      for (i = 0; i < state.player_cards.length; i++) {
-        if (state.cards[i] === 1 && (temp_player_count + 10) < 22) {
+      for (i = 0; i < player_cards.length; i++) {
+        if (player_cards[i][0] === 1 && (temp_player_count + 10) < 22) {
           temp_player_count += 10;
         }
       }
-
-      if (temp_dealer_count > 16) {
-        if (temp_dealer_count > temp_player_count) {
-          state.bet = 0;
-        } else if (temp_dealer_count === temp_player_count) {
-          state.money += state.bet;
-          state.bet = 0;
-        } else {
-          state.money += (2 * state.bet);
-          state.bet = 0;
-        }
+      if (dealer_busted) {
+        money += (2 * bet);
+        bet = 0;
+        player_won = true;
       } else {
-        //dealer draws a card
-        card_number = getCard(state);
-        state.dealer_cards.push(card_number);
-        if (card_number === 11 || card_number === 12 || card_number === 13) {
-          card_number = 10;
-        }
-        state.dealer_count += card_number;
-        if (state.dealer_count > 21) {
-          state.dealer_busted = true;
+        if (dealer_count > temp_player_count) {
+          bet = 0;
+          dealer_won = true;
+        } else if (dealer_count === temp_player_count) {
+          money += bet;
+          bet = 0;
+          tie = true;
+        } else {
+          money += (2 * bet);
+          bet = 0;
+          player_won = true;
         }
       }
-      break;
-    case 'DEALER_BUSTED':
-      state.player_turn = true;
-      break;
+      return _.assign({}, state, {bet: bet, money: money, deck: deck, dealer_cards: dealer_cards, dealer_count: dealer_count, 
+        dealer_busted: dealer_busted, dealer_turn: false, player_turn: false, dealer_won: dealer_won, player_won: player_won, tie: tie});
     default: {
       return state;
     }
   }
-  console.log("returning");
-  return state;
 };
 
 export { mainReducer }

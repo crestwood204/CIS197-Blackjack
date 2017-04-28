@@ -9,19 +9,180 @@ export default class Card extends React.Component {
 
   render() {
     if (this.props.hidden) {
-      return ( <span className="card-back"> </span>);
+      return ( <span className="card">🂠</span>);
     } else {
       switch (this.props.number) {
         case 1:
-          return ( <span className="card"> <p> A </p> </span>);
+          switch (this.props.suit) {
+            case 0:
+              return ( <span className="card">🂡</span>);
+            case 1:
+              return ( <span className="card">🂱</span>);
+            case 2:
+              return ( <span className="card">🃁</span>);
+            case 3:
+              return ( <span className="card">🃑</span>);
+            default:
+              return ( <span className="card">A</span>);
+          }
+        case 2:
+          switch (this.props.suit) {
+            case 0:
+              return ( <span className="card">🂢</span>);
+            case 1:
+              return ( <span className="card">🂲</span>);
+            case 2:
+              return ( <span className="card">🃂</span>);
+            case 3:
+              return ( <span className="card">🃒</span>);
+            default:
+              return ( <span className="card">2</span>);
+          }
+        case 3:
+          switch (this.props.suit) {
+            case 0:
+              return ( <span className="card">🂣</span>);
+            case 1:
+              return ( <span className="card">🂳</span>);
+            case 2:
+              return ( <span className="card">🃃</span>);
+            case 3:
+              return ( <span className="card">🃓</span>);
+            default:
+              return ( <span className="card">3</span>);
+          }
+        case 4:
+          switch (this.props.suit) {
+            case 0:
+              return ( <span className="card">🂤</span>);
+            case 1:
+              return ( <span className="card">🂴</span>);
+            case 2:
+              return ( <span className="card">🃄</span>);
+            case 3:
+              return ( <span className="card">🃔</span>);
+            default:
+              return ( <span className="card">4</span>);
+          }
+        case 5:
+          switch (this.props.suit) {
+            case 0:
+              return ( <span className="card">🂥</span>);
+            case 1:
+              return ( <span className="card">🂵</span>);
+            case 2:
+              return ( <span className="card">🃅</span>);
+            case 3:
+              return ( <span className="card">🃕</span>);
+            default:
+              return ( <span className="card">5</span>);
+          }
+        case 6:
+          switch (this.props.suit) {
+            case 0:
+              return ( <span className="card">🂦</span>);
+            case 1:
+              return ( <span className="card">🂶</span>);
+            case 2:
+              return ( <span className="card">🃆</span>);
+            case 3:
+              return ( <span className="card">🃖</span>);
+            default:
+              return ( <span className="card">6</span>);
+          }
+        case 7:
+          switch (this.props.suit) {
+            case 0:
+              return ( <span className="card">🂧</span>);
+            case 1:
+              return ( <span className="card">🂷</span>);
+            case 2:
+              return ( <span className="card">🃇</span>);
+            case 3:
+              return ( <span className="card">🃗</span>);
+            default:
+              return ( <span className="card">7</span>);
+          }
+        case 8:
+          switch (this.props.suit) {
+            case 0:
+              return ( <span className="card">🂨</span>);
+            case 1:
+              return ( <span className="card">🂸</span>);
+            case 2:
+              return ( <span className="card">🃈</span>);
+            case 3:
+              return ( <span className="card">🃘</span>);
+            default:
+              return ( <span className="card">8</span>);
+          }
+        case 9:
+          switch (this.props.suit) {
+            case 0:
+              return ( <span className="card">🂩</span>);
+            case 1:
+              return ( <span className="card">🂹</span>);
+            case 2:
+              return ( <span className="card">🃉</span>);
+            case 3:
+              return ( <span className="card">🃙</span>);
+            default:
+              return ( <span className="card">9</span>);
+          }
+        case 10:
+          switch (this.props.suit) {
+            case 0:
+              return ( <span className="card">🂪</span>);
+            case 1:
+              return ( <span className="card">🂺</span>);
+            case 2:
+              return ( <span className="card">🃊</span>);
+            case 3:
+              return ( <span className="card">🃚</span>);
+            default:
+              return ( <span className="card">10</span>);
+          }
         case 11:
-          return ( <span className="card"> <p> J </p> </span>);
+          switch (this.props.suit) {
+            case 0:
+              return ( <span className="card">🂫</span>);
+            case 1:
+              return ( <span className="card">🂻</span>);
+            case 2:
+              return ( <span className="card">🃋</span>);
+            case 3:
+              return ( <span className="card">🃛</span>);
+            default:
+              return ( <span className="card">J</span>);
+          }
         case 12:
-          return ( <span className="card"> <p> Q </p> </span>);
+          switch (this.props.suit) {
+            case 0:
+              return ( <span className="card">🂭</span>);
+            case 1:
+              return ( <span className="card">🂽</span>);
+            case 2:
+              return ( <span className="card">🃍</span>);
+            case 3:
+              return ( <span className="card">🃝</span>);
+            default:
+              return ( <span className="card">Q</span>);
+          }
         case 13:
-          return ( <span className="card"> <p> K </p> </span>);
+          switch (this.props.suit) {
+            case 0:
+              return ( <span className="card">🂮</span>);
+            case 1:
+              return ( <span className="card">🂾</span>);
+            case 2:
+              return ( <span className="card">🃎</span>);
+            case 3:
+              return ( <span className="card">🃞</span>);
+            default:
+              return ( <span className="card">K</span>);
+          }
         default:
-          return ( <span className="card"> <p> {this.props.number} </p> </span>);
+          return ( <span className="card">{this.props.number}</span>);
       }
     }
   }
@@ -34,5 +195,6 @@ Card.propTypes = {
 };
 
 Card.defaultProps = {
-  number: 0
+  number: 0,
+  suit: 0
 }

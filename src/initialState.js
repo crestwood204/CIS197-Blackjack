@@ -1,11 +1,12 @@
-const player_cards = [null, null];
+const player_cards = [];
 
-const dealer_cards = [null, null];
+const dealer_cards = [];
 
 const deck = [];
 for (var i = 1; i < 14; i++) {
   for (var j = 0; j < 4; j++) {
-    deck.push(i);
+    const card = [i, j];
+    deck.push(card);
   }
 }
 
@@ -22,19 +23,18 @@ const get_card = function () {
   return card_number;
 }
 
-player_cards[0] = get_card();
-player_cards[1] = get_card();
-
-dealer_cards[0] = get_card();
-dealer_cards[1] = get_card();
 
 const money = 1000;
 const bet = 0;
 const busted = false;
 const count = 0;
-const player_turn = true;
+const player_turn = false;
 const dealer_count = 0;
 const dealer_busted = false;
+const bet_zero = true;
+const player_won = false;
+const dealer_won = false;
+const tie = false;
 
 
-export { player_cards, dealer_cards, deck, money, bet, busted, count, player_turn, dealer_count, dealer_busted };
+export { player_cards, dealer_cards, deck, money, bet, busted, count, player_turn, dealer_count, dealer_busted, bet_zero, player_won, dealer_won, tie };
