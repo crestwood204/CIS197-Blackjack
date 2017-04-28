@@ -23,55 +23,51 @@ export default class Blackjack extends React.Component {
   }
 
   componentWillMount() {
-
     console.log(this.props.state);
-    this.props.store.subscribe(function () {
-      this.setState(this.props.store.getState());
-    }.bind(this));
     console.log("componentDidMount");
   }
 
   onBet(amount) {
-    this.props.store.dispatch(actions.bet(amount));
+    this.props.dispatch(actions.bet(amount));
   }
 
   onReset() {
-    this.props.store.disptach(actions.reset());
+    this.props.disptach(actions.reset());
   }
 
   onHit() {
-    this.props.store.dispatch(actions.hit());
+    this.props.dispatch(actions.hit());
   }
 
   onStand() {
-    this.props.store.dispatch(actions.stand());
+    this.props.dispatch(actions.stand());
   }
 
   onDeal() {
-    this.props.store.dispatch(actions.deal());
+    this.props.dispatch(actions.deal());
   }
 
   onBusted() {
-    this.props.store.dispatch(actions.busted());
+    this.props.dispatch(actions.busted());
   }
 
   onDealerTurn() {
-    this.props.store.dispatch(actions.dealerTurn());
+    this.props.dispatch(actions.dealerTurn());
   }
 
   onDealerBusted() {
-    this.props.store.dispatch(actions.dealerBusted());
+    this.props.dispatch(actions.dealerBusted());
   }
   render() {
-    console.log(this.props.store);
+    console.log(this.props.dispatch);
     
     const dealer_hand = () => {
-      for (var i = 0; i < this.state.dealer_cards.length; i++) {
+      for (var i = 0; i < this.props.state.dealer_cards.length; i++) {
         var card;
-        if (this.state.player_turn && i === 0) {
-          card = <Card store={this.props.store} index={i} number={this.state.dealer_cards[i]} key={i} hidden={true}></Card>;
+        if (this.props.state.player_turn && i === 0) {
+          card = <Card store={this.props.store} index={i} number={this.props.state.dealer_cards[i]} key={i} hidden={true}></Card>;
         } else {
-          card = <Card store={this.props.store} index={i} number={this.state.dealer_cards[i]} key={i} hidden={false}></Card>;
+          card = <Card store={this.props.store} index={i} number={this.props.state.dealer_cards[i]} key={i} hidden={false}></Card>;
         }
         return card;
       }
@@ -85,13 +81,13 @@ export default class Blackjack extends React.Component {
       </div>;
 
     const increment_key = (number) => {
-      return this.state.dealer_cards.length + number;
+      return this.props.state.dealer_cards.length + number;
     }
 
     const player_hand = () => {
-      for (var i = 0; i < this.state.player_cards.length; i++) {
+      for (var i = 0; i < this.props.state.player_cards.length; i++) {
         var number = increment_key(i);
-        return <Card store={this.props.store} index={i} number={this.state.dealer_cards} key={number}> hidden={false}</Card>
+        return <Card store={this.props.store} index={i} number={this.props.state.dealer_cards} key={number}> hidden={false}</Card>
       }
     }
 
@@ -121,13 +117,13 @@ export default class Blackjack extends React.Component {
       <button key='Hit' onClick={this.onHit}>hit</button>
       <button key="Stand" onClick={this.onStand}>stand</button>
       </div>;
-    if (this.state.busted) {
+    if (this.props.state.busted) {
       this.onBusted();
       return (<div className="game">{dealer}<p> YOU BUSTED!></p>{bets}{controls}</div>);
-    } else if (this.state.dealer_busted) {
+    } else if (this.props.state.dealer_busted) {
       this.onDealerBusted();
       return (<div className="game"><p> DEALER BUSTED!></p>{bets}{controls}</div>);
-    } else if (this.state.player_turn) {
+    } else if (this.props.state.player_turn) {
       return (<div className="game">{dealer}{player}{bets}{controls}</div>);
     } else {
       this.onDealerTurn();

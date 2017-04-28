@@ -5,6 +5,6 @@ let mapStateToProps = (state) => {
   return  { state }
 }
 
-let BlackjackWrapper = connect(mapStateToProps, null)(Blackjack);
+let BlackjackWrapper = connect(mapStateToProps)(Blackjack);
 
 export default BlackjackWrapper;
